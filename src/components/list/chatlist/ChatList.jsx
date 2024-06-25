@@ -13,18 +13,18 @@ const ChatList = () => {
   const [chat, setChat] = useState([])
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userschat", currentUser.id), async (doc) => {
-      const item = await doc.data().chats
+    const unSub = onSnapshot(doc(db, "userschat", currentUser.id), async (res) => {
+      const item = await res.data().chats
 
       const promises = item.map(async (item) => {
-        const docUserRef = doc(db, "users", item.resiverId);
+        const docUserRef = doc(db, "users", item.reseiverId);
         const docUserSnap = await getDoc(docUserRef);
 
         const user = docUserSnap.data()
         return { ...item, user }
       })
       const chatData = await Promise.all(promises)
-      setChat(chatData.sort((a, b) => b.updateAt - a.updateAt))
+      setChat(chatData.sort((a, b) => b.updatedAt - a.updatedAt))
     });
     return () => unSub()
   }, [currentUser.id])
@@ -41,9 +41,9 @@ const ChatList = () => {
       </div>
       {chat.map((data) => (
         <div className='chatitem' key={data.chatId}>
-          <img src="/ava.jpg" alt="avatar" />
+          <img src={data.user.ava || "/ava.jpg"} alt="avatar" />
           <div>
-            <h3>Hammer</h3>
+            <h3>{data.user.name}</h3>
             <p>{data.lastMessage}</p>
           </div>
         </div>

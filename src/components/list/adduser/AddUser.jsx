@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import './adduser.css'
 import { db } from '../../../lib/firebase';
+import { useUserStore } from '../../../lib/store';
 
 const AddUser = () => {
   const [user, setUser] = useState(null)
+  const { currentUser } = useUserStore()
 
   const handleSearh = async (e) => {
     e.preventDefault()
@@ -23,6 +25,35 @@ const AddUser = () => {
     }
 
   }
+  const handleAdd = async () => {
+    const chatRef = collection(db, 'chats')
+    const userChatRef = collection(db, 'userschat')
+    try {
+      const newChatRef = doc(chatRef)
+      await setDoc(newChatRef, {
+        createdAt: serverTimestamp(),
+        messages: []
+      })
+      await updateDoc(doc(userChatRef, user.id), {
+        chats: arrayUnion({
+          chatId: newChatRef.id,
+          lastMessage: '',
+          reseiverId: currentUser.id,
+          updatedAt: Date.now(),
+        })
+      })
+      await updateDoc(doc(userChatRef, currentUser.id), {
+        chats: arrayUnion({
+          chatId: newChatRef.id,
+          lastMessage: '',
+          reseiverId: user.id,
+          updatedAt: Date.now()
+        })
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className='adduser'>
       <form onSubmit={handleSearh}>
@@ -34,7 +65,7 @@ const AddUser = () => {
           <img src={user.ava || "smile.jpg"} alt="smile" />
           <h3>{user.name}</h3>
         </div>
-        <button>Add User</button>
+        <button onClick={handleAdd}>Add User</button>
       </div>}
     </div>
   )
