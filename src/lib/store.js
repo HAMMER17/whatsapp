@@ -12,7 +12,7 @@ export const useUserStore = create((set) => ({
 
       if (docSnap.exists()) {
         set({ currentUser: docSnap.data() })
-        console.log("Document data:", docSnap.data());
+        // console.log("Document data:", docSnap.data());
       } else {
         set({ currentUser: null })
         console.log("No such document!");

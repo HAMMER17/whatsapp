@@ -20,7 +20,7 @@ const Chat = () => {
     url: ''
   })
 
-  const { chatId, user } = useChatStore()
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useChatStore()
   const { currentUser } = useUserStore()
   const endRef = useRef(null)
 
@@ -95,9 +95,9 @@ const Chat = () => {
     <div className='chat'>
       <div className="top">
         <div className="user">
-          <img src="/smile.jpg" alt="ava" />
+          <img src={currentUser.ava || "/smile.jpg"} alt="ava" />
           <div>
-            <h3>Alex</h3>
+            <h3>{currentUser.name}</h3>
             <p>Hello , Welcome to my chat</p>
           </div>
         </div>
@@ -137,7 +137,8 @@ const Chat = () => {
           <input type="file" id='file' style={{ display: 'none' }} onChange={handleImg} />
           <FaMicrophone className='icon' />
         </div>
-        <input type="text" placeholder='Text...' value={text} onChange={(e) => setText(e.target.value)} />
+        <input type="text" placeholder='Text...' disabled={isCurrentUserBlocked || isReceiverBlocked}
+          value={text} onChange={(e) => setText(e.target.value)} />
         <div className="emoji">
           <FaSmile onClick={() => setOpen(pre => !pre)} size={25}
             style={{ cursor: 'pointer', margin: '5px', color: 'yellow' }} />
@@ -146,7 +147,7 @@ const Chat = () => {
           </div>
 
         </div>
-        <button onClick={handleSend}>message</button>
+        <button onClick={handleSend} disabled={isCurrentUserBlocked || isReceiverBlocked}>message</button>
       </div>
     </div>
   )

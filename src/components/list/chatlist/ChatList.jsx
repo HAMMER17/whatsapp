@@ -12,8 +12,10 @@ const ChatList = () => {
   const { currentUser } = useUserStore()
   const { changeChat, chatId } = useChatStore()
 
+
   const [add, setAdd] = useState(false)
   const [chat, setChat] = useState([])
+  const [input, setInput] = useState('')
 
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "userschat", currentUser.id), async (res) => {
@@ -35,18 +37,18 @@ const ChatList = () => {
   const handleSelect = async (chat) => {
     await changeChat(chat.chatId, chat.user)
   }
-
+  const filterChats = chat.filter(e => e.user.name.toLowerCase().includes(input))
   return (
     <div className='chatlist'>
       <div className='chatsearch'>
 
-        <input type="text" placeholder='Search...' />
+        <input type="text" placeholder='Search...' value={input} onChange={(e) => setInput(e.target.value)} />
 
 
         {add ? <FaMinusCircle className='chaticon' onClick={() => setAdd(pre => !pre)} /> :
           <FaPlusCircle className='chaticon' onClick={() => setAdd(pre => !pre)} />}
       </div>
-      {chat.map((data) => (
+      {filterChats.map((data) => (
         <div className='chatitem' key={data.chatId} onClick={() => handleSelect(data)}>
           <img src={data.user.ava || "/ava.jpg"} alt="avatar" />
           <div>

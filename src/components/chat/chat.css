@@ -151,6 +151,11 @@
     border-radius: 10px;
     cursor: pointer;
     transition: 1s;
+
+    &:disabled {
+      background-color: hsla(240, 92%, 62%, 0.556);
+      cursor: not-allowed;
+    }
   }
 
   button:hover {
