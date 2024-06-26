@@ -7,7 +7,8 @@
   gap: 100px;
 
   .item {
-    background-color: hsla(120, 100%, 25%, 0.51);
+    background: linear-gradient(45deg, black, yellow, black);
+    /* background-color: hsla(120, 100%, 25%, 0.51); */
     display: flex;
     flex-direction: column;
     align-items: center;

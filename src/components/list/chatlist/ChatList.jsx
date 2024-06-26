@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 
 import { useUserStore } from '../../../lib/store'
+import { useChatStore } from '../../../lib/chat';
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import './chatlist.css'
 import AddUser from '../adduser/AddUser';
@@ -9,6 +10,8 @@ import { db } from '../../../lib/firebase';
 
 const ChatList = () => {
   const { currentUser } = useUserStore()
+  const { changeChat, chatId } = useChatStore()
+
   const [add, setAdd] = useState(false)
   const [chat, setChat] = useState([])
 
@@ -28,7 +31,11 @@ const ChatList = () => {
     });
     return () => unSub()
   }, [currentUser.id])
-  console.log(chat)
+
+  const handleSelect = async (chat) => {
+    await changeChat(chat.chatId, chat.user)
+  }
+
   return (
     <div className='chatlist'>
       <div className='chatsearch'>
@@ -40,11 +47,11 @@ const ChatList = () => {
           <FaPlusCircle className='chaticon' onClick={() => setAdd(pre => !pre)} />}
       </div>
       {chat.map((data) => (
-        <div className='chatitem' key={data.chatId}>
+        <div className='chatitem' key={data.chatId} onClick={() => handleSelect(data)}>
           <img src={data.user.ava || "/ava.jpg"} alt="avatar" />
           <div>
             <h3>{data.user.name}</h3>
-            <p>{data.lastMessage}</p>
+            <p>{data.lastMessages} ...</p>
           </div>
         </div>
       ))}

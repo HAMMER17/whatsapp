@@ -9,11 +9,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { auth } from "./lib/firebase";
 import { useUserStore } from "./lib/store";
+import { useChatStore } from "./lib/chat";
 
 
 function App() {
   const { currentUser, fetchUserStore } = useUserStore()
-  console.log(currentUser?.ava)
+  const { chatId } = useChatStore()
+
   useEffect(() => {
     const unSab = onAuthStateChanged(auth, (user) => {
       fetchUserStore(user?.uid)
@@ -24,8 +26,8 @@ function App() {
     <div className="container">
       {currentUser ? <>
         <List />
-        <Chat />
-        <Detail />
+        {chatId && <Chat />}
+        {chatId && <Detail />}
       </> : <Login />}
       <ToastContainer />
     </div>

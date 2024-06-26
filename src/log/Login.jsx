@@ -88,7 +88,7 @@ const Login = () => {
           <h1>Create an Account</h1>
           <form onSubmit={handleRegister}>
             <img src={ava.url || 'smile.jpg'} alt="ava" />
-            <label htmlFor="file"><FaCamera size={40} style={{ cursor: 'pointer' }} />Upload file</label>
+            <label htmlFor="file" style={{ color: 'green' }}><FaCamera size={40} style={{ cursor: 'pointer' }} />Upload file</label>
             <input type="file" id='file' style={{ display: 'none' }} onChange={handleAva} />
             <input type="text" placeholder='Name...' name='name' />
             <input type="email" placeholder='Email...' name='email' />

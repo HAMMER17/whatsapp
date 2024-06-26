@@ -50,6 +50,7 @@ const AddUser = () => {
           updatedAt: Date.now()
         })
       })
+
     } catch (error) {
       console.log(error)
     }
